@@ -43,6 +43,7 @@ if(isset($_SESSION['user'])) {
             <th>Date</th>
             <th>Time</th>
             <th>Status</th>
+            <th>Actions</th>
         </tr>
         <?php
         $file = fopen("data/attendance.csv", "r");
@@ -54,13 +55,20 @@ if(isset($_SESSION['user'])) {
                 $datetime = $row[3];
                 $date_part = date("Y-m-d", strtotime($datetime));
                 $time_part = date("H:i:s", strtotime($datetime));
-                echo "<tr><td>" . htmlspecialchars($date_part) . "</td><td>" . htmlspecialchars($time_part) . "</td><td>" . htmlspecialchars($row[2]) . "</td></tr>";
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($date_part) . "</td>";
+                echo "<td>" . htmlspecialchars($time_part) . "</td>";
+                echo "<td>" . htmlspecialchars($row[2]) . "</td>";
+                echo "<td>";
+                echo "<a href='edit_attendance.php?id=" . urlencode($row[0]) . "&date=" . urlencode($date_part) . "' class='btn-small'>Edit</a> ";
+                echo "<a href='delete_attendance.php?id=" . urlencode($row[0]) . "&date=" . urlencode($date_part) . "' class='btn-small btn-danger' onclick='return confirm(\"Are you sure you want to delete this record?\")'>Delete</a>";
+                echo "</td></tr>";
             }
         }
         fclose($file);
         
         if (!$found_records) {
-            echo "<tr><td colspan='3' style='text-align: center;'>No attendance records found</td></tr>";
+            echo "<tr><td colspan='4' style='text-align: center;'>No attendance records found</td></tr>";
         }
         ?>
     </table>
